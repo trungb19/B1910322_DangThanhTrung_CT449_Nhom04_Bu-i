@@ -1,6 +1,8 @@
-const ContactService = require("../services/contact.service")
+const ContactService = require("../services/contact.service");
 const MongoDB = require("../utils/mongodb.util");
 const ApiError = require("../api-error");
+const { ObjectId } = require("mongodb");
+
 
 exports.create = (req, res) => {
     res.send({ message: "create handler" });
@@ -92,9 +94,10 @@ exports.findAll = async (req, res, next) => {
 };
 
 //Cài đặt handler update
-exports.update = async (res, req, next) => {
-    if (Object.keys(req.body).length === 0) {
-        return next(new ApiError(400, "Data to update can not be empty"));
+exports.update = async (req, res, next) => {
+    //console.log(Object.keys(req.body).length);
+     if (Object.keys(req.body).length == 0) {
+         return next(new ApiError(400, "Data to update can not be empty"));
     }
     
     try {
@@ -132,7 +135,7 @@ exports.delete = async (req, res, next) => {
 exports.findAllFavorite = async (_req, res, next) => {
     try {
         const contactService = new ContactService(MongoDB.client);
-        const documents = await contactService.findAllFavorite();
+        const documents = await contactService.findFavorite();
         return res.send(documents);
     } catch (error) {
         return next(
